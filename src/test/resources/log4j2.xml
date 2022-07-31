@@ -9,7 +9,7 @@
 
     <Loggers>
         <!-- LOG everything at INFO level -->
-        <Root level="info">
+        <Root level="trace">
             <AppenderRef ref="Console" />
         </Root>
 

@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
+import io.krystof.nocodb.clients.GameTableRecord;
+import io.krystof.nocodb.clients.RecordListing;
+
 class GameTableClientIT {
 
 	static GameTableClient gameTableClient;
@@ -20,8 +23,33 @@ class GameTableClientIT {
 	}
 
 	@Test
-	void test() {
-		LOG.info("{}", gameTableClient.getAllRecords());
+	void testGetAll() {
+		RecordListing<GameTableRecord> gameTableRecordListing = gameTableClient.getAllRecords();
+
+		LOG.info("{}", gameTableRecordListing);
+
+		gameTableRecordListing.getList().forEach(game -> {
+			LOG.info("Game: {}", game);
+		});
+
+	}
+
+	void testGetByTitleAndPlatform() {
+		RecordListing<GameTableRecord> gameTitleAndPlatform = gameTableClient.getGameTableRecord("Some Game Part 1",
+				1);
+
+		LOG.info("{}", gameTitleAndPlatform);
+
+	}
+
+	void testAddRemove() {
+		GameTableRecord testRecord = new GameTableRecord();
+		testRecord.setTitle("TEST GAME DELETE ME");
+		testRecord = gameTableClient.add(testRecord);
+		LOG.info("Added: {}", testRecord);
+		int idOfTestRecordAdded = testRecord.getId();
+//		gameTableClient.deleteById(idOfTestRecordAdded);
+
 	}
 
 }
