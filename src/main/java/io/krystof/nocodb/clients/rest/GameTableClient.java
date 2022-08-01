@@ -162,6 +162,11 @@ public class GameTableClient {
 			flatRecord.setReleaseYear(nonFlatRecord.getReleaseYear());
 			flatRecord.setSeries(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()));
 			flatRecord.setSeriesIndex(nonFlatRecord.getSeriesIndex());
+			if (nonFlatRecord.getSeriesTableLinkRecord() != null) {
+				flatRecord.setSeriesWithIndex(
+						new StringBuilder(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()))
+								.append(" (#").append(nonFlatRecord.getSeriesIndex()).append(")").toString());
+			}
 			flatRecord.setTitle(nonFlatRecord.getTitle());
 			flatRecords.add(flatRecord);
 		});

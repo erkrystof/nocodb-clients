@@ -26,6 +26,9 @@ public class GameTableFlatRecord {
 	@JsonProperty("Series Index")
 	private Integer seriesIndex;
 
+	@JsonProperty("Series With Index")
+	private String seriesWithIndex;
+
 	@JsonProperty("Genres")
 	private String genres;
 
@@ -90,22 +93,6 @@ public class GameTableFlatRecord {
 
 	public void setPlatform(String platform) {
 		this.platform = platform;
-	}
-
-	public String getSeries() {
-		return series;
-	}
-
-	public void setSeries(String series) {
-		this.series = series;
-	}
-
-	public Integer getSeriesIndex() {
-		return seriesIndex;
-	}
-
-	public void setSeriesIndex(Integer seriesIndex) {
-		this.seriesIndex = seriesIndex;
 	}
 
 	public String getGenres() {
@@ -186,6 +173,30 @@ public class GameTableFlatRecord {
 
 	public void setMyNotes(String myNotes) {
 		this.myNotes = myNotes;
+	}
+
+	public String getSeriesWithIndex() {
+		return seriesWithIndex;
+	}
+
+	public void setSeriesWithIndex(String seriesWithIndex) {
+		this.seriesWithIndex = seriesWithIndex;
+	}
+
+	public String getSeries() {
+		return series;
+	}
+
+	public void setSeries(String series) {
+		this.series = series;
+	}
+
+	public Integer getSeriesIndex() {
+		return seriesIndex;
+	}
+
+	public void setSeriesIndex(Integer seriesIndex) {
+		this.seriesIndex = seriesIndex;
 	}
 
 }
