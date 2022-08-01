@@ -11,6 +11,9 @@ public class GameTableFlatRecord {
 	@JsonProperty("Id")
 	private int id;
 
+	@JsonProperty("My Box Art Image")
+	private String boxArtUrl;
+
 	@JsonProperty("Title")
 	private String title;
 
@@ -40,9 +43,6 @@ public class GameTableFlatRecord {
 
 	@JsonProperty("LaunchBox DB Notes")
 	private String launchBoxDbNotes;
-
-	@JsonProperty("My Box Art Image")
-	private String boxArtUrl;
 
 	@JsonProperty("My Finished Status")
 	private String myFinishedStatus;
