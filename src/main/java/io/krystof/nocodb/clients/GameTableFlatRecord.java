@@ -53,6 +53,9 @@ public class GameTableFlatRecord {
 	@JsonProperty("My Rating")
 	private Integer myRating;
 
+	@JsonProperty("My Rating String")
+	private String myRatingString;
+
 	@JsonProperty("My Notes")
 	private String myNotes;
 
@@ -197,6 +200,14 @@ public class GameTableFlatRecord {
 
 	public void setSeriesIndex(Integer seriesIndex) {
 		this.seriesIndex = seriesIndex;
+	}
+
+	public String getMyRatingString() {
+		return myRatingString;
+	}
+
+	public void setMyRatingString(String myRatingString) {
+		this.myRatingString = myRatingString;
 	}
 
 }

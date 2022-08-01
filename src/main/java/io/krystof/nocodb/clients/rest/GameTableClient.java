@@ -153,10 +153,12 @@ public class GameTableClient {
 			flatRecord.setLaunchBoxDatabaseId(nonFlatRecord.getLaunchBoxDatabaseId());
 			flatRecord.setLaunchBoxDbNotes(nonFlatRecord.getLaunchBoxDbNotes());
 			if (nonFlatRecord.getMyFinishedStatus() != null) {
-				flatRecord.setMyFinishedStatus(nonFlatRecord.getMyFinishedStatus().toString());
+				flatRecord.setMyFinishedStatus(nonFlatRecord.getMyFinishedStatus().getLabel());
 			}
 			flatRecord.setMyNotes(nonFlatRecord.getMyNotes());
 			flatRecord.setMyRating(nonFlatRecord.getMyRating());
+			flatRecord.setMyRatingString(
+					nonFlatRecord.getMyRating() != null ? nonFlatRecord.getMyRating() + " of 5" : null);
 			flatRecord.setPlatform(buildStringOfIdAndTitleKey(nonFlatRecord.getPlatformTableLinkRecord()));
 			flatRecord.setPublishers(buildStringOfCollection(nonFlatRecord.getPublisherTableListLinkRecords()));
 			flatRecord.setReleaseYear(nonFlatRecord.getReleaseYear());
