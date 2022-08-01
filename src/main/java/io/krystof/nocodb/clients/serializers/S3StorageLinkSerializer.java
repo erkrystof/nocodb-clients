@@ -1,20 +1,30 @@
 package io.krystof.nocodb.clients.serializers;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import io.krystof.nocodb.clients.S3StorageLink;
+import io.krystof.nocodb.clients.S3StorageLinkList;
 
-public class S3StorageLinkSerializer extends JsonSerializer<List<S3StorageLink>> {
+/**
+ * When we serialize this into Nocodb, it treats it as a string of json, not a
+ * real object, so we convert it to a string first.
+ * 
+ * @author Eric R. Krystof
+ *
+ */
+public class S3StorageLinkSerializer extends JsonSerializer<S3StorageLinkList> {
+
+	ObjectMapper mapper = new ObjectMapper();
 
 	@Override
-	public void serialize(List<S3StorageLink> value, JsonGenerator gen, SerializerProvider serializers)
+	public void serialize(S3StorageLinkList value, JsonGenerator gen, SerializerProvider serializers)
 			throws IOException {
-		gen.writeObject(value);
+
+		gen.writeObject(mapper.writeValueAsString(value.getLinks()));
 	}
 
 }

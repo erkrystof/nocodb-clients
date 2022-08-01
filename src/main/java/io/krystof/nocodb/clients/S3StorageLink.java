@@ -9,7 +9,7 @@ public class S3StorageLink {
 	private String url;
 	private String title;
 	private String mimetype;
-	private Integer size;
+	private Long size;
 
 	@Override
 	public boolean equals(Object o) {
@@ -50,11 +50,11 @@ public class S3StorageLink {
 		this.mimetype = mimetype;
 	}
 
-	public Integer getSize() {
+	public Long getSize() {
 		return size;
 	}
 
-	public void setSize(Integer size) {
+	public void setSize(Long size) {
 		this.size = size;
 	}
 

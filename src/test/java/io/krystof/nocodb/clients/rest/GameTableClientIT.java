@@ -35,7 +35,7 @@ class GameTableClientIT {
 	}
 
 	void testGetByTitleAndPlatform() {
-		RecordListing<GameTableRecord> gameTitleAndPlatform = gameTableClient.getGameTableRecord("Some Game Part 1",
+		RecordListing<GameTableRecord> gameTitleAndPlatform = gameTableClient.getGameTableRecordByTitleAndPlatformId("Some Game Part 1",
 				1);
 
 		LOG.info("{}", gameTitleAndPlatform);

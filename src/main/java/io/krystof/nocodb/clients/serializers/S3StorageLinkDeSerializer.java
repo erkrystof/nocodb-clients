@@ -11,16 +11,20 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.krystof.nocodb.clients.S3StorageLink;
+import io.krystof.nocodb.clients.S3StorageLinkList;
 
-public class S3StorageLinkDeSerializer extends JsonDeserializer<List<S3StorageLink>> {
+public class S3StorageLinkDeSerializer extends JsonDeserializer<S3StorageLinkList> {
 
 	@Override
-	public List<S3StorageLink> deserialize(JsonParser p, DeserializationContext ctxt)
+	public S3StorageLinkList deserialize(JsonParser p, DeserializationContext ctxt)
 			throws IOException, JacksonException {
 		String text = p.getText();
 		ObjectMapper mapper = (ObjectMapper) p.getCodec();
-		return mapper.readValue(text, new TypeReference<List<S3StorageLink>>() {
+		List<S3StorageLink> items = mapper.readValue(text, new TypeReference<List<S3StorageLink>>() {
 		});
+		S3StorageLinkList list = new S3StorageLinkList();
+		list.getLinks().addAll(items);
+		return list;
 	}
 
 }

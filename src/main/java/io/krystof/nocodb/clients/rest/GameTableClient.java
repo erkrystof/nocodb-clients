@@ -1,5 +1,8 @@
 package io.krystof.nocodb.clients.rest;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
+
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -17,7 +20,8 @@ public class GameTableClient {
 
 	private static final String DEFAULT_FIELDS = "Id,Title,My Box Art Image,My Rating,Series Index,LaunchBoxDatabase Id,Release Year,My Finished Status,LaunchBox Database Id,LaunchBox DB Notes,My Notes,PlatformTable,SeriesTable,PublisherTable List,DeveloperTable List,GenreTable List";
 
-	private static final ParameterizedTypeReference<RecordListing<GameTableRecord>> LISTING_TYPE_REFERENCE=new ParameterizedTypeReference<RecordListing<GameTableRecord>>(){};
+	private static final ParameterizedTypeReference<RecordListing<GameTableRecord>> LISTING_TYPE_REFERENCE = new ParameterizedTypeReference<RecordListing<GameTableRecord>>() {
+	};
 
 	public GameTableClient(RestTemplate restTemplate, String url) {
 		super();
@@ -50,21 +54,39 @@ public class GameTableClient {
 		restTemplate.delete(builder.buildAndExpand(Integer.toString(id)).toUri());
 	}
 
+	/**
+	 * There's no checks here, we always add a new record. Does not manage dupes.
+	 * 
+	 * @param gameTableRecord
+	 * @return
+	 */
 	public GameTableRecord add(GameTableRecord gameTableRecord) {
 		HttpEntity<GameTableRecord> requestEntity = new HttpEntity<GameTableRecord>(gameTableRecord);
 		return restTemplate.postForEntity(url, requestEntity, GameTableRecord.class).getBody();
 	}
 
+	public void update(int gameId, Map<String, Object> updateRequestFields) {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).path("/{id}");
+		restTemplate.patchForObject(builder.buildAndExpand(Integer.toString(gameId)).toUri(), updateRequestFields,
+				String.class);
+	}
+
 	/**
 	 * Not a real primary key via the rest api, but we use this to see if the record
-	 * exists. If we detect more than one record we throw an exception.
+	 * exists. If we detect more than one record we throw an exception. If no record
+	 * found, returns null.
+	 * 
+	 * @throws UnsupportedEncodingException
 	 */
-	public RecordListing<GameTableRecord> getGameTableRecord(String title, int platformId) {
+	public RecordListing<GameTableRecord> getGameTableRecordByTitleAndPlatformId(String title, int platformId) {
 		HttpEntity<String> requestEntity = new HttpEntity<String>("");
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+		UriComponentsBuilder builder;
+		builder = UriComponentsBuilder.fromUriString(url)
 				.queryParam("limit", GameTableClient.DEFAULT_PAGE_SIZE)
 				.queryParam("fields", DEFAULT_FIELDS)
-				.queryParam("where", String.format("(Title,eq,%s)~and(PlatformTable_id,eq,%d)", title, platformId));
+				.queryParam("where", String.format("(Title,eq,%s)~and(PlatformTable_id,eq,%d)",
+						title, platformId))
+				.encode();
 
 		ResponseEntity<RecordListing<GameTableRecord>> response = restTemplate.exchange(builder.build().toUri(),
 				HttpMethod.GET, requestEntity,
@@ -72,7 +94,11 @@ public class GameTableClient {
 
 		if (response.getBody().getPageInfo().getTotalRows() > 1) {
 			throw new UnexpectedMultipleRowsException(
-					String.format("Found multiple rows for title %s and platform id %d", title, platformId));
+					String.format("Found multiple rows for title %s and platform id %d. URL: %s", title, platformId,
+							builder.build().toUri().toString()));
+		}
+		if (response.getBody().getPageInfo().getTotalRows() == 0) {
+			return null;
 		}
 		return response.getBody();
 	}

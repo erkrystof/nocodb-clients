@@ -6,11 +6,6 @@ import org.pojomatic.Pojomatic;
 import org.pojomatic.annotations.AutoProperty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import io.krystof.nocodb.clients.serializers.S3StorageLinkDeSerializer;
-import io.krystof.nocodb.clients.serializers.S3StorageLinkSerializer;
 
 @AutoProperty
 public class GameTableRecord {
@@ -48,12 +43,8 @@ public class GameTableRecord {
 	@JsonProperty("LaunchBox DB Notes")
 	private String launchBoxDbNotes;
 
-//	private String myBoxArtImage;
-
 	@JsonProperty("My Box Art Image")
-	@JsonDeserialize(using = S3StorageLinkDeSerializer.class)
-	@JsonSerialize(using = S3StorageLinkSerializer.class)
-	private List<S3StorageLink> myBoxArtImages;
+	private S3StorageLinkList myBoxArtImages;
 
 	@JsonProperty("My Finished Status")
 	private MyFinishedStatus myFinishedStatus;
@@ -151,13 +142,6 @@ public class GameTableRecord {
 		this.myNotes = myNotes;
 	}
 
-	public List<S3StorageLink> getMyBoxArtImages() {
-		return myBoxArtImages;
-	}
-
-	public void setMyBoxArtImages(List<S3StorageLink> myBoxArtImages) {
-		this.myBoxArtImages = myBoxArtImages;
-	}
 
 	public List<IdAndTitleKey> getGenreTableListLinkRecords() {
 		return idAndTitleKeies;
@@ -205,6 +189,14 @@ public class GameTableRecord {
 
 	public void setDeveloperTableListLinkRecords(List<IdAndTitleKey> developerTableListLinkRecords) {
 		this.developerTableListLinkRecords = developerTableListLinkRecords;
+	}
+
+	public S3StorageLinkList getMyBoxArtImages() {
+		return myBoxArtImages;
+	}
+
+	public void setMyBoxArtImages(S3StorageLinkList myBoxArtImages) {
+		this.myBoxArtImages = myBoxArtImages;
 	}
 
 }
