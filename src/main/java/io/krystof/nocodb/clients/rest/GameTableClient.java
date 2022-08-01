@@ -1,8 +1,12 @@
 package io.krystof.nocodb.clients.rest;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -10,13 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.krystof.nocodb.clients.GameTableFlatRecord;
 import io.krystof.nocodb.clients.GameTableRecord;
+import io.krystof.nocodb.clients.IdAndTitleKey;
 import io.krystof.nocodb.clients.RecordListing;
 import io.krystof.nocodb.clients.exceptions.UnexpectedMultipleRowsException;
 
 public class GameTableClient {
 
-	private static final String DEFAULT_PAGE_SIZE = "25";
+	private static final String DEFAULT_PAGE_SIZE = "1000";
 
 	private static final String DEFAULT_FIELDS = "Id,Title,My Box Art Image,My Rating,Series Index,LaunchBoxDatabase Id,Release Year,My Finished Status,LaunchBox Database Id,LaunchBox DB Notes,My Notes,PlatformTable,SeriesTable,PublisherTable List,DeveloperTable List,GenreTable List";
 
@@ -129,6 +135,66 @@ public class GameTableClient {
 		}
 
 		return summationListing;
+	}
+
+	public List<GameTableFlatRecord> getAllFlatRecords() {
+
+		RecordListing<GameTableRecord> allNormalRecords = getAllRecords();
+
+		List<GameTableFlatRecord> flatRecords = new ArrayList<>();
+
+		allNormalRecords.getList().forEach(nonFlatRecord -> {
+			GameTableFlatRecord flatRecord = new GameTableFlatRecord();
+			flatRecord.setBoxArtUrl(
+					convertImageUrlToThumnailUrl(nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl()));
+			flatRecord.setDevelopers(buildStringOfCollection(nonFlatRecord.getDeveloperTableListLinkRecords()));
+			flatRecord.setGenres(buildStringOfCollection(nonFlatRecord.getGenreTableListLinkRecords()));
+			flatRecord.setId(nonFlatRecord.getId());
+			flatRecord.setLaunchBoxDatabaseId(nonFlatRecord.getLaunchBoxDatabaseId());
+			flatRecord.setLaunchBoxDbNotes(nonFlatRecord.getLaunchBoxDbNotes());
+			if (nonFlatRecord.getMyFinishedStatus() != null) {
+				flatRecord.setMyFinishedStatus(nonFlatRecord.getMyFinishedStatus().toString());
+			}
+			flatRecord.setMyNotes(nonFlatRecord.getMyNotes());
+			flatRecord.setMyRating(nonFlatRecord.getMyRating());
+			flatRecord.setPlatform(buildStringOfIdAndTitleKey(nonFlatRecord.getPlatformTableLinkRecord()));
+			flatRecord.setPublishers(buildStringOfCollection(nonFlatRecord.getPublisherTableListLinkRecords()));
+			flatRecord.setReleaseYear(nonFlatRecord.getReleaseYear());
+			flatRecord.setSeries(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()));
+			flatRecord.setSeriesIndex(nonFlatRecord.getSeriesIndex());
+			flatRecord.setTitle(nonFlatRecord.getTitle());
+			flatRecords.add(flatRecord);
+		});
+
+		return flatRecords;
+	}
+
+	private String convertImageUrlToThumnailUrl(String urlAsString) {
+		String fileName = StringUtils.substringAfterLast(urlAsString, "/");
+		String preFileName = StringUtils.substringBeforeLast(urlAsString, "/");
+		return new StringBuilder(preFileName).append("/").append(StringUtils.substringBeforeLast(fileName, "."))
+				.append("-thumb")
+				.append(".").append(StringUtils.substringAfterLast(fileName, ".")).toString();
+	}
+
+	private String buildStringOfCollection(List<IdAndTitleKey> idAndTitleList) {
+		if (CollectionUtils.isNotEmpty(idAndTitleList)) {
+			StringBuilder sb = new StringBuilder();
+			idAndTitleList.forEach(idAndTitle -> {
+				sb.append(idAndTitle.getTitle()).append(", ");
+			});
+			sb.setLength(sb.length() - 2);
+			return sb.toString();
+		}
+
+		return null;
+	}
+
+	private String buildStringOfIdAndTitleKey(IdAndTitleKey idAndTitleKey) {
+		if (idAndTitleKey == null) {
+			return null;
+		}
+		return idAndTitleKey.getTitle();
 	}
 
 }
