@@ -14,6 +14,9 @@ public class GameTableFlatRecord {
 	@JsonProperty("My Box Art Image")
 	private String boxArtUrl;
 
+	@JsonProperty("My Box Art Image Thumbnail")
+	private String boxArtUrlThumbnail;
+
 	@JsonProperty("Title")
 	private String title;
 
@@ -44,6 +47,12 @@ public class GameTableFlatRecord {
 	@JsonProperty("Release Year")
 	private Integer releaseYear;
 
+	@JsonProperty("Wikipedia URL")
+	private String wikipediaUrl;
+
+	@JsonProperty("Video URL")
+	private String videoUrl;
+
 	@JsonProperty("LaunchBox DB Notes")
 	private String launchBoxDbNotes;
 
@@ -58,6 +67,15 @@ public class GameTableFlatRecord {
 
 	@JsonProperty("My Notes")
 	private String myNotes;
+
+	@JsonProperty("My Death Count")
+	private String myDeathCount;
+
+	@JsonProperty("My Last Played")
+	private String myLastPlayed;
+
+	@JsonProperty("My High Score")
+	private String myHighScore;
 
 	@Override
 	public boolean equals(Object o) {
@@ -208,6 +226,54 @@ public class GameTableFlatRecord {
 
 	public void setMyRatingString(String myRatingString) {
 		this.myRatingString = myRatingString;
+	}
+
+	public String getWikipediaUrl() {
+		return wikipediaUrl;
+	}
+
+	public void setWikipediaUrl(String wikipediaUrl) {
+		this.wikipediaUrl = wikipediaUrl;
+	}
+
+	public String getVideoUrl() {
+		return videoUrl;
+	}
+
+	public void setVideoUrl(String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
+
+	public String getBoxArtUrlThumbnail() {
+		return boxArtUrlThumbnail;
+	}
+
+	public void setBoxArtUrlThumbnail(String boxArtUrlThumbnail) {
+		this.boxArtUrlThumbnail = boxArtUrlThumbnail;
+	}
+
+	public String getMyDeathCount() {
+		return myDeathCount;
+	}
+
+	public void setMyDeathCount(String myDeathCount) {
+		this.myDeathCount = myDeathCount;
+	}
+
+	public String getMyLastPlayed() {
+		return myLastPlayed;
+	}
+
+	public void setMyLastPlayed(String myLastPlayed) {
+		this.myLastPlayed = myLastPlayed;
+	}
+
+	public String getMyHighScore() {
+		return myHighScore;
+	}
+
+	public void setMyHighScore(String myHighScore) {
+		this.myHighScore = myHighScore;
 	}
 
 }

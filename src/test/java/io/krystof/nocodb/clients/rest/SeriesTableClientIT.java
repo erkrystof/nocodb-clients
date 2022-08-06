@@ -1,7 +1,6 @@
 package io.krystof.nocodb.clients.rest;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -22,7 +21,7 @@ class SeriesTableClientIT {
 		client = new SeriesTableClient(restTemplate, url);
 	}
 
-	@Test
+
 	void testGetAll() {
 		RecordListing<SeriesTableRecord> recordListing = client.getAllRecords();
 

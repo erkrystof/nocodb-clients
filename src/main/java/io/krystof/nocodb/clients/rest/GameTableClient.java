@@ -24,7 +24,7 @@ public class GameTableClient {
 
 	private static final String DEFAULT_PAGE_SIZE = "1000";
 
-	private static final String DEFAULT_FIELDS = "Id,Title,My Box Art Image,My Rating,Series Index,LaunchBoxDatabase Id,Release Year,My Finished Status,LaunchBox Database Id,LaunchBox DB Notes,My Notes,PlatformTable,SeriesTable,PublisherTable List,DeveloperTable List,GenreTable List";
+	private static final String DEFAULT_FIELDS = "Id,Title,My Box Art Image,My Rating,Series Index,LaunchBoxDatabase Id,Release Year,My Finished Status,LaunchBox Database Id,LaunchBox DB Notes,My Notes,PlatformTable,SeriesTable,PublisherTable List,DeveloperTable List,GenreTable List,Wikipedia URL,Video URL,My Death Count,My Last Played,My High Score";
 
 	private static final ParameterizedTypeReference<RecordListing<GameTableRecord>> LISTING_TYPE_REFERENCE = new ParameterizedTypeReference<RecordListing<GameTableRecord>>() {
 	};
@@ -109,6 +109,19 @@ public class GameTableClient {
 		return response.getBody();
 	}
 
+	public GameTableRecord getGameTableRecord(int id) {
+		HttpEntity<String> requestEntity = new HttpEntity<String>("");
+		UriComponentsBuilder builder;
+		builder = UriComponentsBuilder.fromUriString(url).path("/{id}");
+
+		ResponseEntity<GameTableRecord> response = restTemplate.exchange(
+				builder.buildAndExpand(id).toUri(),
+				HttpMethod.GET, requestEntity,
+				GameTableRecord.class);
+
+		return response.getBody();
+	}
+
 	public RecordListing<GameTableRecord> getAllRecords() {
 		RecordListing<GameTableRecord> summationListing = new RecordListing<GameTableRecord>();
 		HttpEntity<String> requestEntity = new HttpEntity<String>("");
@@ -144,36 +157,52 @@ public class GameTableClient {
 		List<GameTableFlatRecord> flatRecords = new ArrayList<>();
 
 		allNormalRecords.getList().forEach(nonFlatRecord -> {
-			GameTableFlatRecord flatRecord = new GameTableFlatRecord();
-			flatRecord.setBoxArtUrl(
-					convertImageUrlToThumnailUrl(nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl()));
-			flatRecord.setDevelopers(buildStringOfCollection(nonFlatRecord.getDeveloperTableListLinkRecords()));
-			flatRecord.setGenres(buildStringOfCollection(nonFlatRecord.getGenreTableListLinkRecords()));
-			flatRecord.setId(nonFlatRecord.getId());
-			flatRecord.setLaunchBoxDatabaseId(nonFlatRecord.getLaunchBoxDatabaseId());
-			flatRecord.setLaunchBoxDbNotes(nonFlatRecord.getLaunchBoxDbNotes());
-			if (nonFlatRecord.getMyFinishedStatus() != null) {
-				flatRecord.setMyFinishedStatus(nonFlatRecord.getMyFinishedStatus().getLabel());
-			}
-			flatRecord.setMyNotes(nonFlatRecord.getMyNotes());
-			flatRecord.setMyRating(nonFlatRecord.getMyRating());
-			flatRecord.setMyRatingString(
-					nonFlatRecord.getMyRating() != null ? nonFlatRecord.getMyRating() + " of 5" : null);
-			flatRecord.setPlatform(buildStringOfIdAndTitleKey(nonFlatRecord.getPlatformTableLinkRecord()));
-			flatRecord.setPublishers(buildStringOfCollection(nonFlatRecord.getPublisherTableListLinkRecords()));
-			flatRecord.setReleaseYear(nonFlatRecord.getReleaseYear());
-			flatRecord.setSeries(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()));
-			flatRecord.setSeriesIndex(nonFlatRecord.getSeriesIndex());
-			if (nonFlatRecord.getSeriesTableLinkRecord() != null) {
-				flatRecord.setSeriesWithIndex(
-						new StringBuilder(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()))
-								.append(" (#").append(nonFlatRecord.getSeriesIndex()).append(")").toString());
-			}
-			flatRecord.setTitle(nonFlatRecord.getTitle());
-			flatRecords.add(flatRecord);
+			flatRecords.add(convertToFlat(nonFlatRecord));
 		});
 
 		return flatRecords;
+	}
+
+	public GameTableFlatRecord getFlatGameTableRecord(int gameId) {
+		GameTableRecord record = getGameTableRecord(gameId);
+		return convertToFlat(record);
+	}
+
+	private GameTableFlatRecord convertToFlat(GameTableRecord nonFlatRecord) {
+		GameTableFlatRecord flatRecord = new GameTableFlatRecord();
+		flatRecord.setBoxArtUrl(
+				nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl());
+		flatRecord.setBoxArtUrlThumbnail(
+				convertImageUrlToThumnailUrl(nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl()));
+		flatRecord.setDevelopers(buildStringOfCollection(nonFlatRecord.getDeveloperTableListLinkRecords()));
+		flatRecord.setGenres(buildStringOfCollection(nonFlatRecord.getGenreTableListLinkRecords()));
+		flatRecord.setId(nonFlatRecord.getId());
+		flatRecord.setLaunchBoxDatabaseId(nonFlatRecord.getLaunchBoxDatabaseId());
+		flatRecord.setLaunchBoxDbNotes(nonFlatRecord.getLaunchBoxDbNotes());
+		if (nonFlatRecord.getMyFinishedStatus() != null) {
+			flatRecord.setMyFinishedStatus(nonFlatRecord.getMyFinishedStatus().getLabel());
+		}
+		flatRecord.setMyNotes(nonFlatRecord.getMyNotes());
+		flatRecord.setMyRating(nonFlatRecord.getMyRating());
+		flatRecord.setMyRatingString(
+				nonFlatRecord.getMyRating() != null ? nonFlatRecord.getMyRating() + " of 5" : null);
+		flatRecord.setPlatform(buildStringOfIdAndTitleKey(nonFlatRecord.getPlatformTableLinkRecord()));
+		flatRecord.setPublishers(buildStringOfCollection(nonFlatRecord.getPublisherTableListLinkRecords()));
+		flatRecord.setReleaseYear(nonFlatRecord.getReleaseYear());
+		flatRecord.setSeries(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()));
+		flatRecord.setSeriesIndex(nonFlatRecord.getSeriesIndex());
+		if (nonFlatRecord.getSeriesTableLinkRecord() != null) {
+			flatRecord.setSeriesWithIndex(
+					new StringBuilder(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()))
+							.append(" (#").append(nonFlatRecord.getSeriesIndex()).append(")").toString());
+		}
+		flatRecord.setTitle(nonFlatRecord.getTitle());
+		flatRecord.setVideoUrl(nonFlatRecord.getVideoUrl());
+		flatRecord.setWikipediaUrl(nonFlatRecord.getWikipediaUrl());
+		flatRecord.setMyDeathCount(nonFlatRecord.getMyDeathCount());
+		flatRecord.setMyLastPlayed(nonFlatRecord.getMyLastPlayed());
+		flatRecord.setMyHighScore(nonFlatRecord.getMyHighScore());
+		return flatRecord;
 	}
 
 	private String convertImageUrlToThumnailUrl(String urlAsString) {

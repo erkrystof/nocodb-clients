@@ -37,6 +37,19 @@ public class GameTableRecordFieldMapBuilder {
 		return this;
 	}
 
+	public GameTableRecordFieldMapBuilder withWikipediaUrl(Optional<String> wikipediaUrl) {
+		if (wikipediaUrl != null) {
+			map.put("Wikipedia URL", wikipediaUrl.orElse(null));
+		}
+		return this;
+	}
+
+	public GameTableRecordFieldMapBuilder withVideoUrl(Optional<String> videoUrl) {
+		if (videoUrl != null) {
+			map.put("Video URL", videoUrl.orElse(null));
+		}
+		return this;
+	}
 	public GameTableRecordFieldMapBuilder withLaunchBoxDatabaseNotes(Optional<String> launchBoxDbNotes) {
 		if (launchBoxDbNotes != null) {
 			map.put("LaunchBox DB Notes", launchBoxDbNotes.orElse(null));

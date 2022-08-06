@@ -1,11 +1,13 @@
 package io.krystof.nocodb.clients.rest;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
+import io.krystof.nocodb.clients.GameTableFlatRecord;
 import io.krystof.nocodb.clients.GameTableRecord;
 import io.krystof.nocodb.clients.RecordListing;
 
@@ -22,7 +24,7 @@ class GameTableClientIT {
 		gameTableClient = new GameTableClient(restTemplate, url);
 	}
 
-	@Test
+
 	void testGetAll() {
 		RecordListing<GameTableRecord> gameTableRecordListing = gameTableClient.getAllRecords();
 
@@ -30,6 +32,18 @@ class GameTableClientIT {
 
 		gameTableRecordListing.getList().forEach(game -> {
 			LOG.info("Game: {}", game);
+		});
+
+	}
+
+
+	void testGetAllFlat() {
+		List<GameTableFlatRecord> gameTableRecordListing = gameTableClient.getAllFlatRecords();
+
+		LOG.info("{}", gameTableRecordListing);
+
+		gameTableRecordListing.forEach(game -> {
+			LOG.info("Game: {}", game.getTitle());
 		});
 
 	}
