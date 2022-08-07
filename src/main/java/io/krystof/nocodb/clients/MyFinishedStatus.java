@@ -9,7 +9,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum MyFinishedStatus {
 
-	IN_PROGRESS("In Progress"), COMPLETED("Completed"), ABANDONED("Abandoned"), ON_HOLD("On Hold");
+	IN_PROGRESS("In Progress"), COMPLETED("Completed"), ABANDONED("Abandoned"), ON_HOLD("On Hold"),
+	NOT_STARTED("Not Started");
 
 	private static final Map<String, MyFinishedStatus> mMap = Collections.unmodifiableMap(initializeMapping());
 

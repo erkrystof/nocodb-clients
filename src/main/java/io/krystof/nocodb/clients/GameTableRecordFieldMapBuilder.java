@@ -23,6 +23,13 @@ public class GameTableRecordFieldMapBuilder {
 		return this;
 	}
 
+	public GameTableRecordFieldMapBuilder withMyFinishedStatus(Optional<MyFinishedStatus> myFinishedStatus) {
+		if (myFinishedStatus != null) {
+			map.put("My Finished Status", myFinishedStatus.orElse(null));
+		}
+		return this;
+	}
+
 	public GameTableRecordFieldMapBuilder withSeriesIndex(Optional<Integer> seriesIndex) {
 		if (seriesIndex != null) {
 			map.put("Series Index", seriesIndex.orElse(null));
