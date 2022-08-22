@@ -22,6 +22,9 @@ public class GameTableRecord {
 	@JsonProperty("SeriesTable")
 	private IdAndTitleKey seriesTableLinkRecord;
 
+	@JsonProperty("PortIdentifierTable")
+	private IdAndTitleKey portIdentifierLinkRecord;
+
 	@JsonProperty("Series Index")
 	private Integer seriesIndex;
 
@@ -252,6 +255,14 @@ public class GameTableRecord {
 
 	public void setMyHighScore(String myHighScore) {
 		this.myHighScore = myHighScore;
+	}
+
+	public IdAndTitleKey getPortIdentifierLinkRecord() {
+		return portIdentifierLinkRecord;
+	}
+
+	public void setPortIdentifierLinkRecord(IdAndTitleKey portIdentifierLinkRecord) {
+		this.portIdentifierLinkRecord = portIdentifierLinkRecord;
 	}
 
 }

@@ -24,7 +24,7 @@ public class GameTableClient {
 
 	private static final String DEFAULT_PAGE_SIZE = "1000";
 
-	private static final String DEFAULT_FIELDS = "Id,Title,My Box Art Image,My Rating,Series Index,LaunchBoxDatabase Id,Release Year,My Finished Status,LaunchBox Database Id,LaunchBox DB Notes,My Notes,PlatformTable,SeriesTable,PublisherTable List,DeveloperTable List,GenreTable List,Wikipedia URL,Video URL,My Death Count,My Last Played,My High Score";
+	private static final String DEFAULT_FIELDS = "Id,Title,My Box Art Image,My Rating,Series Index,LaunchBoxDatabase Id,Release Year,My Finished Status,LaunchBox Database Id,LaunchBox DB Notes,My Notes,PlatformTable,PortIdentifierTable,SeriesTable,PublisherTable List,DeveloperTable List,GenreTable List,Wikipedia URL,Video URL,My Death Count,My Last Played,My High Score";
 
 	private static final ParameterizedTypeReference<RecordListing<GameTableRecord>> LISTING_TYPE_REFERENCE = new ParameterizedTypeReference<RecordListing<GameTableRecord>>() {
 	};
@@ -150,6 +150,19 @@ public class GameTableClient {
 		return summationListing;
 	}
 
+	public List<GameTableFlatRecord> getAllFlatRecordsForWordpressDisplay() {
+
+		RecordListing<GameTableRecord> allNormalRecords = getAllRecords();
+
+		List<GameTableFlatRecord> flatRecords = new ArrayList<>();
+
+		allNormalRecords.getList().forEach(nonFlatRecord -> {
+			flatRecords.add(convertToFlat(nonFlatRecord, true));
+		});
+
+		return flatRecords;
+	}
+
 	public List<GameTableFlatRecord> getAllFlatRecords() {
 
 		RecordListing<GameTableRecord> allNormalRecords = getAllRecords();
@@ -157,7 +170,7 @@ public class GameTableClient {
 		List<GameTableFlatRecord> flatRecords = new ArrayList<>();
 
 		allNormalRecords.getList().forEach(nonFlatRecord -> {
-			flatRecords.add(convertToFlat(nonFlatRecord));
+			flatRecords.add(convertToFlat(nonFlatRecord, false));
 		});
 
 		return flatRecords;
@@ -165,10 +178,10 @@ public class GameTableClient {
 
 	public GameTableFlatRecord getFlatGameTableRecord(int gameId) {
 		GameTableRecord record = getGameTableRecord(gameId);
-		return convertToFlat(record);
+		return convertToFlat(record, false);
 	}
 
-	private GameTableFlatRecord convertToFlat(GameTableRecord nonFlatRecord) {
+	private GameTableFlatRecord convertToFlat(GameTableRecord nonFlatRecord, boolean convertLineFeedsToBreaks) {
 		GameTableFlatRecord flatRecord = new GameTableFlatRecord();
 		flatRecord.setBoxArtUrl(
 				nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl());
@@ -178,15 +191,21 @@ public class GameTableClient {
 		flatRecord.setGenres(buildStringOfCollection(nonFlatRecord.getGenreTableListLinkRecords()));
 		flatRecord.setId(nonFlatRecord.getId());
 		flatRecord.setLaunchBoxDatabaseId(nonFlatRecord.getLaunchBoxDatabaseId());
-		flatRecord.setLaunchBoxDbNotes(nonFlatRecord.getLaunchBoxDbNotes());
 		if (nonFlatRecord.getMyFinishedStatus() != null) {
 			flatRecord.setMyFinishedStatus(nonFlatRecord.getMyFinishedStatus().getLabel());
 		}
-		flatRecord.setMyNotes(nonFlatRecord.getMyNotes());
+		if (convertLineFeedsToBreaks) {
+			flatRecord.setLaunchBoxDbNotes(convertLineFeedToBreaks(nonFlatRecord.getLaunchBoxDbNotes()));
+			flatRecord.setMyNotes(convertLineFeedToBreaks(nonFlatRecord.getMyNotes()));
+		} else {
+			flatRecord.setLaunchBoxDbNotes(nonFlatRecord.getLaunchBoxDbNotes());
+			flatRecord.setMyNotes(nonFlatRecord.getMyNotes());
+		}
 		flatRecord.setMyRating(nonFlatRecord.getMyRating());
 		flatRecord.setMyRatingString(
 				nonFlatRecord.getMyRating() != null ? nonFlatRecord.getMyRating() + " of 5" : null);
 		flatRecord.setPlatform(buildStringOfIdAndTitleKey(nonFlatRecord.getPlatformTableLinkRecord()));
+		flatRecord.setPortIdentifier(buildStringOfIdAndTitleKey(nonFlatRecord.getPortIdentifierLinkRecord()));
 		flatRecord.setPublishers(buildStringOfCollection(nonFlatRecord.getPublisherTableListLinkRecords()));
 		flatRecord.setReleaseYear(nonFlatRecord.getReleaseYear());
 		flatRecord.setSeries(buildStringOfIdAndTitleKey(nonFlatRecord.getSeriesTableLinkRecord()));
@@ -203,6 +222,10 @@ public class GameTableClient {
 		flatRecord.setMyLastPlayed(nonFlatRecord.getMyLastPlayed());
 		flatRecord.setMyHighScore(nonFlatRecord.getMyHighScore());
 		return flatRecord;
+	}
+
+	private String convertLineFeedToBreaks(String myNotes) {
+		return StringUtils.replace(myNotes, "\n", "<br>");
 	}
 
 	private String convertImageUrlToThumnailUrl(String urlAsString) {

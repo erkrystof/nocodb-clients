@@ -26,6 +26,9 @@ public class GameTableFlatRecord {
 	@JsonProperty("Series")
 	private String series;
 
+	@JsonProperty("Port Identifier")
+	private String portIdentifier;
+
 	@JsonProperty("Series Index")
 	private Integer seriesIndex;
 
@@ -274,6 +277,14 @@ public class GameTableFlatRecord {
 
 	public void setMyHighScore(String myHighScore) {
 		this.myHighScore = myHighScore;
+	}
+
+	public String getPortIdentifier() {
+		return portIdentifier;
+	}
+
+	public void setPortIdentifier(String portIdentifier) {
+		this.portIdentifier = portIdentifier;
 	}
 
 }
