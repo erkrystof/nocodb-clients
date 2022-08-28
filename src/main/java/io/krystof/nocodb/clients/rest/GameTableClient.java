@@ -187,6 +187,8 @@ public class GameTableClient {
 				nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl());
 		flatRecord.setBoxArtUrlThumbnail(
 				convertImageUrlToThumnailUrl(nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl()));
+		flatRecord.setBoxArtUrlThumbnailMedium(
+				convertImageUrlToThumnailUrlMedium(nonFlatRecord.getMyBoxArtImages().getLinks().get(0).getUrl()));
 		flatRecord.setDevelopers(buildStringOfCollection(nonFlatRecord.getDeveloperTableListLinkRecords()));
 		flatRecord.setGenres(buildStringOfCollection(nonFlatRecord.getGenreTableListLinkRecords()));
 		flatRecord.setId(nonFlatRecord.getId());
@@ -224,8 +226,12 @@ public class GameTableClient {
 		return flatRecord;
 	}
 
-	private String convertLineFeedToBreaks(String myNotes) {
-		return StringUtils.replace(myNotes, "\n", "<br>");
+	private String convertImageUrlToThumnailUrlMedium(String urlAsString) {
+		String fileName = StringUtils.substringAfterLast(urlAsString, "/");
+		String preFileName = StringUtils.substringBeforeLast(urlAsString, "/");
+		return new StringBuilder(preFileName).append("/").append(StringUtils.substringBeforeLast(fileName, "."))
+				.append("-thumb-medium")
+				.append(".").append(StringUtils.substringAfterLast(fileName, ".")).toString();
 	}
 
 	private String convertImageUrlToThumnailUrl(String urlAsString) {
@@ -234,6 +240,10 @@ public class GameTableClient {
 		return new StringBuilder(preFileName).append("/").append(StringUtils.substringBeforeLast(fileName, "."))
 				.append("-thumb")
 				.append(".").append(StringUtils.substringAfterLast(fileName, ".")).toString();
+	}
+
+	private String convertLineFeedToBreaks(String myNotes) {
+		return StringUtils.replace(myNotes, "\n", "<br>");
 	}
 
 	private String buildStringOfCollection(List<IdAndTitleKey> idAndTitleList) {

@@ -17,6 +17,9 @@ public class GameTableFlatRecord {
 	@JsonProperty("My Box Art Image Thumbnail")
 	private String boxArtUrlThumbnail;
 
+	@JsonProperty("My Box Art Image Thumbnail")
+	private String boxArtUrlThumbnailMedium;
+
 	@JsonProperty("Title")
 	private String title;
 
@@ -285,6 +288,14 @@ public class GameTableFlatRecord {
 
 	public void setPortIdentifier(String portIdentifier) {
 		this.portIdentifier = portIdentifier;
+	}
+
+	public String getBoxArtUrlThumbnailMedium() {
+		return boxArtUrlThumbnailMedium;
+	}
+
+	public void setBoxArtUrlThumbnailMedium(String boxArtUrlThumbnailMedium) {
+		this.boxArtUrlThumbnailMedium = boxArtUrlThumbnailMedium;
 	}
 
 }
