@@ -17,7 +17,7 @@ public class GameTableFlatRecord {
 	@JsonProperty("My Box Art Image Thumbnail")
 	private String boxArtUrlThumbnail;
 
-	@JsonProperty("My Box Art Image Thumbnail")
+	@JsonProperty("My Box Art Image Thumbnail Medium")
 	private String boxArtUrlThumbnailMedium;
 
 	@JsonProperty("Title")
