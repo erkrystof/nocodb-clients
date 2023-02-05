@@ -71,6 +71,13 @@ public class GameTableRecordFieldMapBuilder {
 		return this;
 	}
 
+	public GameTableRecordFieldMapBuilder withRating(Optional<Integer> myRating) {
+		if (myRating.isPresent()) {
+			map.put("My Rating", myRating.orElse(null));
+		}
+		return this;
+	}
+
 	public Map<String, Object> build() {
 		return map;
 	}

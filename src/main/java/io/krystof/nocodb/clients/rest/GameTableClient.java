@@ -229,7 +229,7 @@ public class GameTableClient {
 	private String convertImageUrlToThumnailUrlMedium(String urlAsString) {
 		String fileName = StringUtils.substringAfterLast(urlAsString, "/");
 		String preFileName = StringUtils.substringBeforeLast(urlAsString, "/");
-		return new StringBuilder(preFileName).append("/").append(StringUtils.substringBeforeLast(fileName, "."))
+		return new StringBuilder(preFileName).append("/").append(fileName)
 				.append("-thumb-medium")
 				.append(".").append(StringUtils.substringAfterLast(fileName, ".")).toString();
 	}
@@ -237,7 +237,7 @@ public class GameTableClient {
 	private String convertImageUrlToThumnailUrl(String urlAsString) {
 		String fileName = StringUtils.substringAfterLast(urlAsString, "/");
 		String preFileName = StringUtils.substringBeforeLast(urlAsString, "/");
-		return new StringBuilder(preFileName).append("/").append(StringUtils.substringBeforeLast(fileName, "."))
+		return new StringBuilder(preFileName).append("/").append(fileName)
 				.append("-thumb")
 				.append(".").append(StringUtils.substringAfterLast(fileName, ".")).toString();
 	}

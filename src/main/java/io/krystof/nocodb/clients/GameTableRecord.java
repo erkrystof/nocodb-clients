@@ -1,5 +1,6 @@
 package io.krystof.nocodb.clients;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.pojomatic.Pojomatic;
@@ -29,13 +30,13 @@ public class GameTableRecord {
 	private Integer seriesIndex;
 
 	@JsonProperty("GenreTable List")
-	private List<IdAndTitleKey> idAndTitleKeies;
+	private List<IdAndTitleKey> idAndTitleKeies = new ArrayList<>();
 
 	@JsonProperty("PublisherTable List")
-	private List<IdAndTitleKey> publisherTableListLinkRecords;
+	private List<IdAndTitleKey> publisherTableListLinkRecords = new ArrayList<>();
 
 	@JsonProperty("DeveloperTable List")
-	private List<IdAndTitleKey> developerTableListLinkRecords;
+	private List<IdAndTitleKey> developerTableListLinkRecords = new ArrayList<>();
 
 	@JsonProperty("LaunchBox Database Id")
 	private String launchBoxDatabaseId;

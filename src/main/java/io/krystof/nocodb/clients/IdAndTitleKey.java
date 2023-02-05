@@ -8,6 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AutoProperty
 public class IdAndTitleKey {
 
+	public IdAndTitleKey(int id, String title) {
+		super();
+		this.id = id;
+		this.title = title;
+	}
+
+	public IdAndTitleKey() {
+	}
+
 	@JsonProperty("Id")
 	private int id;
 
