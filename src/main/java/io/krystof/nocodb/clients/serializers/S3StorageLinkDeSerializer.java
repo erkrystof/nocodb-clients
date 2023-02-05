@@ -19,9 +19,7 @@ public class S3StorageLinkDeSerializer extends JsonDeserializer<S3StorageLinkLis
 	public S3StorageLinkList deserialize(JsonParser p, DeserializationContext ctxt)
 			throws IOException, JacksonException {
 
-//		JsonNode node = p.getCodec().readTree(p);
 		ObjectMapper mapper = (ObjectMapper) p.getCodec();
-//		System.out.println("NODE: " + mapper.writeValueAsString(node));
 		List<S3StorageLink> items = mapper.readValue(p, new TypeReference<List<S3StorageLink>>() {
 		});
 		S3StorageLinkList list = new S3StorageLinkList();
